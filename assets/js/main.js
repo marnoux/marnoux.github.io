@@ -260,7 +260,7 @@
  */
 
 $(function () {
-  dob = new Date(dob);
+  dob = new Date('1994-12-10');
   var today = new Date();
   var age = Math.floor((today - dob) / (365.25 * 24 * 60 * 60 * 1000));
   $('#age').html(age);
