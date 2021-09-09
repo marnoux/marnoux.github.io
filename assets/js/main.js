@@ -253,15 +253,35 @@
     })
   });
 
+  Date.prototype.getDoY = function () {
+    var onejan = new Date(this.getFullYear(), 0, 1);
+    return Math.floor(((this - onejan) / 86400000) + 1);
+  };
+
+  function getAge(birthDate) {
+    function isLeap(year) {
+      return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
+    }
+
+    var now = new Date(),
+      age = now.getFullYear() - birthDate.getFullYear(),
+      doyNow = now.getDoY(),
+      doyBirth = birthDate.getDoY();
+
+    // normalize day-of-year in leap years
+    if (isLeap(now.getFullYear()) && doyNow > 58 && doyBirth > 59)
+      doyNow--;
+
+    if (isLeap(birthDate.getFullYear()) && doyNow > 58 && doyBirth > 59)
+      doyBirth--;
+
+    if (doyNow <= doyBirth)
+      age--;  // birthday not yet passed this year, so -1
+
+    return age;
+  };
+
+  var myBirth = new Date(1994, 12, 10);
+  document.getElementById('age').innerHTML = getAge(myBirth);
 })()
 
-/**
- * Adhoc functions
- */
-
-$(function () {
-  dob = new Date('1994-12-10');
-  var today = new Date();
-  var age = Math.floor((today - dob) / (365.25 * 24 * 60 * 60 * 1000));
-  $('#age').html(age);
-});
